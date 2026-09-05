@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="description" content="Builder Account Generator – bulk account creation made easy" />
+  <title>Builder Account Generator</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400..600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ── Reset & Base ── */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f1f5f9;
+      --surface: rgba(255, 255, 255, 0.82);
+      --surface-2: #f8fafc;
+      --surface-3: #f1f5f9;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #6366f1;
+      --accent-2: #8b5cf6;
+      --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --terminal: #0f172a;
+      --terminal-2: #1e293b;
+      --terminal-text: #cbd5e1;
+      --shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.10);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --header: 64px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --surface: rgba(30, 41, 59, 0.85);
+        --surface-2: #1e293b;
+        --surface-3: #334155;
+        --text: #f1f5f9;
+        --muted: #94a3b8;
+        --border: #334155;
+        --shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 20px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--muted);
+    }
+
+    /* ── App Layout ── */
+    .app {
+      width: min(1600px, 100%);
+      height: 100dvh;
+      margin: 0 auto;
+      padding: 12px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ── Header ── */
+    .header {
+      height: var(--header);
+      min-height: var(--header);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: var(--surface);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: var(--accent-gradient);
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(99, 102, 241, 0.25);
+      font-size: 1.15rem;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .brand h1 span {
+      font-weight: 400;
+      -webkit-text-fill-color: var(--muted);
+      background: none;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 16px;
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+      transition: 0.2s;
+    }
+    .status-dot.busy {
+      background: var(--warning);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+    }
+
+    .clock {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      opacity: 0.6;
+    }
+
+    /* ── Workspace: 3 columns ── */
+    .workspace {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .panel {
+      min-height: 0;
+      overflow: hidden;
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Left: Controls ── */
+    .panel-left {
+      flex: 0 0 260px;
+      min-width: 220px;
+      padding: 18px 16px 16px;
+      gap: 12px;
+    }
+
+    /* ── Middle: Accounts Table ── */
+    .panel-middle {
+      flex: 1 1 0%;
+      min-width: 300px;
+      padding: 14px 16px 16px;
+    }
+
+    /* ── Right: Logs ── */
+    .panel-right {
+      flex: 0 0 300px;
+      min-width: 240px;
+      padding: 14px 14px 14px;
+      background: var(--terminal);
+      border-color: var(--terminal-2);
+      color: var(--terminal-text);
+    }
+
+    /* ── Resize handles ── */
+    .resize-handle {
+      width: 4px;
+      flex: 0 0 4px;
+      cursor: col-resize;
+      background: transparent;
+      position: relative;
+      transition: 0.2s;
+      touch-action: none;
+      user-select: none;
+      z-index: 4;
+    }
+    .resize-handle::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px;
+      height: 30%;
+      min-height: 40px;
+      border-radius: 4px;
+      background: var(--border);
+      transition: 0.25s ease;
+    }
+    .resize-handle:hover::after,
+    .resize-handle.dragging::after {
+      width: 3px;
+      height: 45%;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+    }
+
+    /* ── Left Panel Content ── */
+
+    /* Count Row — ENHANCED VISIBILITY */
+    .count-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 14px 16px 16px;
+      background: var(--accent-gradient);
+      border-radius: var(--radius-sm);
+      color: white;
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.25);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+    /* subtle glow ring */
+    .count-row::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: calc(var(--radius-sm) + 2px);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.20), transparent 60%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .count-row>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    .count-row label {
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.10);
+    }
+
+    .count-row label i {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .count-row .count-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-sm);
+      padding: 2px 2px 2px 14px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: 0.2s;
+    }
+
+    .count-row .count-input-wrap:focus-within {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+    }
+
+    .count-row .count-input {
+      width: 100%;
+      height: 42px;
+      padding: 0 10px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      text-align: center;
+      color: #0f172a;
+      background: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      transition: 0.2s;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+    }
+
+    .count-row .count-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3), 0 4px 14px rgba(0, 0, 0, 0.08);
+      transform: scale(1.01);
+    }
+
+    .count-row .count-input:hover {
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15), 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .count-row .count-hint {
+      font-size: 0.6rem;
+      opacity: 0.75;
+      font-weight: 400;
+      text-align: right;
+      padding-right: 4px;
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.02em;
+    }
+
+    .count-row .count-hint i {
+      font-size: 0.5rem;
+      opacity: 0.6;
+      margin-right: 2px;
+    }
+
+    /* ── Form ── */
+    .form-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 2px;
+    }
+    .field label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .field label .optional {
+      font-weight: 400;
+      text-transform: none;
+      opacity: 0.5;
+      font-size: 0.6rem;
+    }
+    .control {
+      width: 100%;
+      height: 36px;
+      padding: 0 12px;
+      color: var(--text);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: 0.2s;
+      font-size: 0.85rem;
+    }
+    .control:hover {
+      border-color: var(--accent);
+    }
+    .control:focus {
+      background: var(--surface);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+    }
+    .field-hint {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.55rem;
+    }
+
+    /* ── Launch ── */
+    .launch {
+      width: 100%;
+      height: 40px;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      background: var(--accent-gradient);
+      font-size: 0.85rem;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.2);
+      transition: 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .launch:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(99, 102, 241, 0.3);
+    }
+    .launch:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .launch:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    /* ── Progress ── */
+    .progress {
+      height: 3px;
+      overflow: hidden;
+      border-radius: 40px;
+      background: var(--surface-3);
+      flex: 0 0 auto;
+    }
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent-gradient);
+      transition: width 0.3s ease;
+    }
+
+    /* ── Actions ── */
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      flex: 0 0 auto;
+    }
+    .action {
+      height: 28px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--muted);
+      background: var(--surface);
+      font-size: 0.65rem;
+      font-weight: 600;
+      transition: 0.15s ease;
+      cursor: pointer;
+    }
+    .action:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.06);
+    }
+    .action.danger:hover {
+      color: var(--danger);
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.06);
+    }
+
+    /* ── Middle Panel: Accounts Table ── */
+    .panel-middle .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      flex: 0 0 auto;
+    }
+    .count-badge {
+      min-width: 28px;
+      height: 22px;
+      padding: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      color: var(--muted);
+      background: var(--surface-2);
+      font-size: 0.6rem;
+      font-weight: 600;
+    }
+
+    .table-wrap {
+      flex: 1;
+      min-height: 40px;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-2);
+      scrollbar-gutter: stable;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 8px 10px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: left;
+    }
+    td {
+      height: 36px;
+      padding: 4px 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      vertical-align: middle;
+    }
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+    tbody tr:hover td {
+      background: rgba(99, 102, 241, 0.04);
+    }
+
+    .idx {
+      width: 38px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.65rem;
+    }
+    .email-col {
+      width: 42%;
+    }
+    .pass-col {
+      width: 42%;
+    }
+    .copy-col {
+      width: 50px;
+      text-align: center;
+    }
+
+    .email,
+    .password {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 2px 6px;
+      transition: 0.15s ease;
+    }
+    .email {
+      color: var(--accent);
+    }
+    .email:hover {
+      background: rgba(99, 102, 241, 0.08);
+    }
+    .password {
+      color: var(--muted);
+    }
+    .password:hover {
+      background: rgba(100, 116, 139, 0.08);
+    }
+
+    .email.copied,
+    .password.copied {
+      animation: copied-flash 0.8s ease forwards;
+    }
+    @keyframes copied-flash {
+      0% {
+        background: rgba(16, 185, 129, 0);
+        color: var(--text);
+      }
+      30% {
+        background: rgba(16, 185, 129, 0.14);
+        color: var(--success);
+      }
+      70% {
+        background: rgba(16, 185, 129, 0.07);
+        color: var(--success);
+      }
+      100% {
+        background: transparent;
+        color: var(--text);
+      }
+    }
+    .email.copied {
+      color: var(--success) !important;
+    }
+    .password.copied {
+      color: var(--success) !important;
+    }
+
+    .copy {
+      width: 30px;
+      height: 28px;
+      border: none;
+      border-radius: 7px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .copy:hover {
+      color: var(--accent);
+      background: rgba(99, 102, 241, 0.08);
+      transform: scale(1.08);
+    }
+    .copy:active {
+      transform: scale(0.9);
+    }
+    .copy.copied {
+      color: var(--success) !important;
+      background: rgba(16, 185, 129, 0.12);
+      animation: copied-pulse 0.6s ease;
+    }
+    @keyframes copied-pulse {
+      0% {
+        transform: scale(1);
+      }
+      40% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .empty {
+      min-height: 100px;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      text-align: center;
+    }
+    .empty i {
+      opacity: 0.2;
+      font-size: 1.3rem;
+    }
+
+    /* ── Right Panel: Logs ── */
+    .log-head {
+      min-height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      flex: 0 0 auto;
+    }
+    .log-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .filters {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+    .filter {
+      height: 22px;
+      padding: 0 8px;
+      border: none;
+      border-radius: 5px;
+      color: rgba(255, 255, 255, 0.25);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.55rem;
+      font-weight: 600;
+      transition: 0.15s;
+    }
+    .filter:hover,
+    .filter.active {
+      color: rgba(255, 255, 255, 0.75);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .log-clear {
+      width: 24px;
+      height: 22px;
+      border: none;
+      border-radius: 5px;
+      color: rgba(255, 255, 255, 0.2);
+      background: transparent;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .log-clear:hover {
+      color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .logs {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 8px 2px 0 0;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      line-height: 1.6;
+      scrollbar-gutter: stable;
+    }
+    .log {
+      display: grid;
+      grid-template-columns: 68px 1fr;
+      gap: 8px;
+      min-height: 24px;
+      padding: 2px 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .log-time {
+      color: rgba(255, 255, 255, 0.2);
+      font-family: var(--font);
+      font-size: 0.5rem;
+      font-weight: 500;
+    }
+    .log-msg {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      color: var(--terminal-text);
+    }
+    .log.success .log-msg {
+      color: #6ee7b7;
+    }
+    .log.error .log-msg {
+      color: #fca5a5;
+    }
+    .log.warning .log-msg {
+      color: #fcd34d;
+    }
+    .log-empty {
+      padding: 30px 8px;
+      color: rgba(255, 255, 255, 0.12);
+      text-align: center;
+      font-family: var(--font);
+      font-size: 0.7rem;
+    }
+
+    /* ── Toasts ── */
+    .toast-stack {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 1000;
+      width: min(360px, calc(100vw - 40px));
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      font-size: 0.8rem;
+      animation: toast-in 0.2s ease-out;
+    }
+    .toast.success i {
+      color: var(--success);
+    }
+    .toast.error i {
+      color: var(--danger);
+    }
+    .toast.warning i {
+      color: var(--warning);
+    }
+    .toast.info i {
+      color: var(--accent);
+    }
+    .toast.out {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: 0.2s ease;
+    }
+    @keyframes toast-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .panel-left {
+        flex: 0 0 220px;
+        min-width: 180px;
+      }
+      .panel-right {
+        flex: 0 0 240px;
+        min-width: 180px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      body {
+        overflow: auto;
+      }
+      .app {
+        height: auto;
+        min-height: 100dvh;
+        padding: 8px;
+        gap: 8px;
+      }
+      .workspace {
+        flex-direction: column;
+        overflow: visible;
+        gap: 8px;
+      }
+      .panel {
+        min-width: 0;
+        flex: 1 1 auto;
+        border-radius: var(--radius);
+        min-height: 240px;
+      }
+      .panel-left {
+        min-height: 320px;
+      }
+      .panel-middle {
+        min-height: 300px;
+      }
+      .panel-right {
+        min-height: 200px;
+      }
+      .resize-handle {
+        display: none;
+      }
+      .header {
+        padding: 0 12px;
+        height: 56px;
+        min-height: 56px;
+      }
+      .brand h1 {
+        font-size: 1rem;
+      }
+      .status {
+        padding: 4px 10px;
+        font-size: 0.6rem;
+      }
+      .count-row .count-input {
+        height: 38px;
+        font-size: 1rem;
+      }
+      .panel-left {
+        padding: 14px;
+      }
+      .panel-middle {
+        padding: 12px 14px;
+      }
+      .panel-right {
+        padding: 12px 14px;
+      }
+      .email-col,
+      .pass-col {
+        width: 35%;
+      }
+      .copy-col {
+        width: 44px;
+      }
+      td {
+        font-size: 0.6rem;
+        padding: 3px 6px;
+      }
+      .log {
+        grid-template-columns: 52px 1fr;
+        gap: 5px;
+      }
+      .toast-stack {
+        right: 10px;
+        bottom: 10px;
+        width: calc(100vw - 20px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+      .brand h1 {
+        font-size: 0.85rem;
+      }
+      .count-row {
+        padding: 12px 12px 14px;
+      }
+      .count-row label {
+        font-size: 0.7rem;
+      }
+      .count-row .count-input {
+        height: 34px;
+        font-size: 0.9rem;
+      }
+      .count-row .count-input-wrap {
+        padding-left: 10px;
+      }
+      .control {
+        height: 32px;
+        font-size: 0.8rem;
+      }
+      .launch {
+        height: 36px;
+        font-size: 0.8rem;
+      }
+      .action {
+        font-size: 0.6rem;
+        padding: 0 8px;
+        height: 24px;
+      }
+      .copy {
+        width: 26px;
+        height: 24px;
+        font-size: 0.65rem;
+      }
+      th {
+        font-size: 0.5rem;
+        padding: 4px 6px;
+      }
+      td {
+        font-size: 0.55rem;
+        padding: 2px 4px;
+        height: 30px;
+      }
+      .idx {
+        width: 28px;
+      }
+      .email-col,
+      .pass-col {
+        width: 32%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <i class="fas fa-cubes"></i>
+        </div>
+        <h1>Builder <span>Account</span> Generator</h1>
+      </div>
+
+      <div class="status" aria-live="polite">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Ready</span>
+        <span class="clock" id="headerTime">00:00:00</span>
+      </div>
+    </header>
+
+    <!-- Workspace: 3 columns -->
+    <section class="workspace" id="workspace">
+
+      <!-- LEFT: Controls -->
+      <section class="panel panel-left" id="panelLeft">
+
+        <!-- 🔥 FIX: The whole count row is now inside the form -->
+        <form id="signupForm" novalidate style="display:contents;">
+
+          <!-- Count Row — ENHANCED VISIBILITY -->
+          <div class="count-row">
+            <label for="count">
+              <i class="fas fa-layer-group"></i>
+              <span>Number of accounts</span>
+            </label>
+            <div class="count-input-wrap">
+              <input class="count-input" id="count" name="count" type="number"
+                     inputmode="numeric" min="1" max="50" value="1" required />
+            </div>
+            <div class="count-hint">
+              <i class="fas fa-arrow-right"></i> 1 – 50
+            </div>
+          </div>
+
+          <!-- Form fields (prefix & password) -->
+          <div class="form-grid">
+            <div class="field">
+              <label for="prefix"><i class="far fa-envelope"></i> Email prefix <span class="optional">(optional)</span></label>
+              <input class="control" id="prefix" name="prefix" type="text"
+                     autocomplete="off" placeholder="e.g. user" />
+              <div class="field-hint">Leave blank for random</div>
+            </div>
+            <div class="field">
+              <label for="password"><i class="fas fa-key"></i> Password <span class="optional">(optional)</span></label>
+              <input class="control" id="password" name="password" type="text"
+                     autocomplete="new-password" placeholder="Auto‑generate" />
+              <div class="field-hint">Leave blank to auto‑generate</div>
+            </div>
+          </div>
+
+          <button class="launch" id="submitBtn" type="submit">
+            <span id="btnText"><i class="fas fa-rocket"></i> Launch</span>
+            <span id="btnSpinner" hidden><i class="fas fa-circle-notch fa-spin"></i> Creating…</span>
+          </button>
+        </form>
+
+        <!-- Progress -->
+        <div class="progress" aria-label="Creation progress">
+          <div class="progress-bar" id="progressFill"></div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button class="action" id="showAccountsBtn" type="button">
+            <i class="fas fa-list"></i> Show
+          </button>
+          <button class="action" id="exportCsvBtn" type="button">
+            <i class="fas fa-file-csv"></i> CSV
+          </button>
+          <button class="action" id="copyAllBtn" type="button">
+            <i class="fas fa-copy"></i> Copy
+          </button>
+          <button class="action danger" id="clearAccountsBtn" type="button">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+        </div>
+
+        <!-- spacer -->
+        <div style="flex:1; min-height:4px;"></div>
+      </section>
+
+      <!-- Resize handle 1 -->
+      <div class="resize-handle" id="resizeLeft" role="separator" aria-label="Resize panels"></div>
+
+      <!-- MIDDLE: Accounts Table -->
+      <section class="panel panel-middle" id="panelMiddle">
+        <div class="section-head">
+          <span><i class="fas fa-database"></i> Accounts</span>
+          <span class="count-badge" id="accountCount">0</span>
+        </div>
+        <div class="table-wrap" id="accountsTableWrap">
+          <div class="empty">
+            <i class="fas fa-inbox"></i>
+            <span>No accounts yet</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Resize handle 2 -->
+      <div class="resize-handle" id="resizeRight" role="separator" aria-label="Resize panels"></div>
+
+      <!-- RIGHT: Logs -->
+      <section class="panel panel-right">
+        <div class="log-head">
+          <div class="log-title">
+            <i class="fas fa-terminal"></i> Logs
+          </div>
+          <div class="filters" role="group" aria-label="Log filters">
+            <button class="filter active" type="button" data-filter="all">All</button>
+            <button class="filter" type="button" data-filter="info">Info</button>
+            <button class="filter" type="button" data-filter="success">OK</button>
+            <button class="filter" type="button" data-filter="warning">Warn</button>
+            <button class="filter" type="button" data-filter="error">Err</button>
+            <button class="log-clear" id="clearLogsBtn" type="button" title="Clear logs">
+              <i class="fas fa-eraser"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="logs" id="logContainer" aria-live="polite">
+          <div class="log-empty">Awaiting commands</div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Toasts -->
+  <div class="toast-stack" id="toastContainer" aria-live="polite"></div>
+
+  <!-- ── JavaScript (unchanged) ── -->
+  <script>
+    (() => {
+      "use strict"
+
+      const $ = id => document.getElementById(id)
+
+      const els = {
+        form: $("signupForm"),
+        prefix: $("prefix"),
+        password: $("password"),
+        count: $("count"),
+        submit: $("submitBtn"),
+        btnText: $("btnText"),
+        btnSpinner: $("btnSpinner"),
+        statusDot: $("statusDot"),
+        statusText: $("statusText"),
+        clock: $("headerTime"),
+        progress: $("progressFill"),
+        table: $("accountsTableWrap"),
+        countBadge: $("accountCount"),
+        logs: $("logContainer"),
+        toast: $("toastContainer"),
+        panelLeft: $("panelLeft"),
+        panelMiddle: $("panelMiddle"),
+        panelRight: $("panelRight"),
+        resizeLeft: $("resizeLeft"),
+        resizeRight: $("resizeRight"),
+        workspace: $("workspace")
+      }
+
+      const state = {
+        accounts: [],
+        logs: [],
+        totalCreated: 0,
+        successCount: 0,
+        target: 1,
+        running: false,
+        filter: "all",
+        abortController: null,
+        lastLogWasAtBottom: true
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;")
+      }
+
+      function normalizeEmail(value) {
+        return String(value ?? "").trim().toLowerCase() || "—"
+      }
+
+      function normalizePassword(value) {
+        return String(value ?? "").trim() || "—"
+      }
+
+      function setStatus(text, busy = false) {
+        els.statusText.textContent = text
+        els.statusDot.classList.toggle("busy", busy)
+      }
+
+      function updateStats() {
+        els.countBadge.textContent = String(state.accounts.length)
+        if (state.running) {
+          const pct = state.target > 0
+            ? Math.min(100, state.successCount / state.target * 100)
+            : 0
+          els.progress.style.width = `${pct}%`
+        }
+      }
+
+      function showToast(message, type = "info") {
+        const item = document.createElement("div")
+        item.className = `toast ${type}`
+
+        const icons = {
+          info: "fa-circle-info",
+          success: "fa-circle-check",
+          warning: "fa-triangle-exclamation",
+          error: "fa-circle-exclamation"
+        }
+
+        const icon = document.createElement("i")
+        icon.className = `fas ${icons[type] || icons.info}`
+
+        const text = document.createElement("span")
+        text.textContent = message
+
+        item.append(icon, text)
+        els.toast.appendChild(item)
+
+        window.setTimeout(() => {
+          item.classList.add("out")
+          window.setTimeout(() => item.remove(), 220)
+        }, 2600)
+      }
+
+      function addLog(message, type = "info") {
+        state.logs.push({
+          message: String(message ?? ""),
+          type: ["info", "success", "warning", "error"].includes(type) ? type : "info",
+          time: new Date()
+        })
+
+        if (state.logs.length > 500) {
+          state.logs.splice(0, state.logs.length - 500)
+        }
+
+        renderLogs()
+      }
+
+      function renderLogs() {
+        const wasAtBottom =
+          els.logs.scrollHeight - els.logs.scrollTop - els.logs.clientHeight < 28
+
+        const visible = state.logs.filter(log =>
+          state.filter === "all" || log.type === state.filter
+        )
+
+        els.logs.textContent = ""
+
+        if (!visible.length) {
+          const empty = document.createElement("div")
+          empty.className = "log-empty"
+          empty.textContent = state.filter === "all"
+            ? "Awaiting commands"
+            : "No matching logs"
+          els.logs.appendChild(empty)
+          return
+        }
+
+        const fragment = document.createDocumentFragment()
+
+        for (const log of visible) {
+          const row = document.createElement("div")
+          row.className = `log ${log.type}`
+
+          const time = document.createElement("span")
+          time.className = "log-time"
+          time.textContent = `[${log.time.toLocaleTimeString([], { hour12: false })}]`
+
+          const msg = document.createElement("span")
+          msg.className = "log-msg"
+          msg.textContent = log.message
+
+          row.append(time, msg)
+          fragment.appendChild(row)
+        }
+
+        els.logs.appendChild(fragment)
+
+        if (wasAtBottom || state.running) {
+          els.logs.scrollTop = els.logs.scrollHeight
+        }
+      }
+
+      function renderAccounts(list) {
+        state.accounts = Array.isArray(list) ? list : []
+        els.countBadge.textContent = String(state.accounts.length)
+        updateStats()
+
+        if (!state.accounts.length) {
+          els.table.innerHTML = `
+            <div class="empty">
+              <i class="fas fa-inbox"></i>
+              <span>No accounts yet</span>
+            </div>
+          `
+          return
+        }
+
+        const table = document.createElement("table")
+        const thead = document.createElement("thead")
+        const headRow = document.createElement("tr")
+
+        for (const [label, cls] of [
+          ["#", "idx"],
+          ["Email", "email-col"],
+          ["Password", "pass-col"],
+          ["", "copy-col"]
+        ]) {
+          const th = document.createElement("th")
+          th.className = cls
+          th.textContent = label
+          headRow.appendChild(th)
+        }
+
+        thead.appendChild(headRow)
+
+        const tbody = document.createElement("tbody")
+
+        state.accounts.forEach((account, index) => {
+          const email = normalizeEmail(account?.email)
+          const password = normalizePassword(account?.password)
+
+          const row = document.createElement("tr")
+
+          const idx = document.createElement("td")
+          idx.className = "idx"
+          idx.textContent = String(index + 1)
+
+          const emailCell = document.createElement("td")
+          emailCell.className = "email"
+          emailCell.textContent = email
+          emailCell.title = email === "—" ? "" : "Click to copy email"
+          emailCell.dataset.copy = email
+
+          const passCell = document.createElement("td")
+          passCell.className = "password"
+          passCell.textContent = password
+          passCell.title = password === "—" ? "" : "Click to copy password"
+          passCell.dataset.copy = password
+
+          const copyCell = document.createElement("td")
+          copyCell.className = "copy-col"
+
+          const copyButton = document.createElement("button")
+          copyButton.className = "copy"
+          copyButton.type = "button"
+          copyButton.title = "Copy password"
+          copyButton.dataset.copy = password
+          copyButton.innerHTML = '<i class="fas fa-key"></i>'
+
+          copyCell.appendChild(copyButton)
+          row.append(idx, emailCell, passCell, copyCell)
+          tbody.appendChild(row)
+        })
+
+        table.append(thead, tbody)
+        els.table.replaceChildren(table)
+      }
+
+      async function copyText(text) {
+        if (!text || text === "—") {
+          throw new Error("Nothing to copy")
+        }
+
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text)
+          return
+        }
+
+        const area = document.createElement("textarea")
+        area.value = text
+        area.setAttribute("readonly", "")
+        area.style.position = "fixed"
+        area.style.opacity = "0"
+        document.body.appendChild(area)
+        area.select()
+
+        const ok = document.execCommand("copy")
+        area.remove()
+
+        if (!ok) {
+          throw new Error("Clipboard access failed")
+        }
+      }
+
+      function csvCell(value) {
+        const text = String(value ?? "")
+        return `"${text.replace(/"/g, '""')}"`
+      }
+
+      function exportCsv() {
+        if (!state.accounts.length) {
+          showToast("No accounts to export", "warning")
+          return
+        }
+
+        const rows = [
+          ["Email", "Password"],
+          ...state.accounts.map(account => [
+            normalizeEmail(account?.email),
+            normalizePassword(account?.password)
+          ])
+        ]
+
+        const csv = rows.map(row => row.map(csvCell).join(",")).join("\r\n")
+        const blob = new Blob(["\ufeff", csv], { type: "text/csv;charset=utf-8" })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement("a")
+
+        link.href = url
+        link.download = `accounts_${new Date().toISOString().slice(0, 10)}.csv`
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+        showToast(`Exported ${state.accounts.length} entries`, "success")
+      }
+
+      async function copyAll() {
+        if (!state.accounts.length) {
+          showToast("No accounts to copy", "warning")
+          return
+        }
+
+        const text = state.accounts.map((account, index) => {
+          const email = normalizeEmail(account?.email)
+          const password = normalizePassword(account?.password)
+          return `${index + 1}. ${email}  |  ${password}`
+        }).join("\n")
+
+        try {
+          await copyText(text)
+          showToast(`Copied ${state.accounts.length} entries`, "success")
+        } catch (error) {
+          showToast(error.message || "Copy failed", "error")
+        }
+      }
+
+      function setRunning(running) {
+        state.running = running
+        els.submit.disabled = running
+        els.btnText.hidden = running
+        els.btnSpinner.hidden = !running
+        setStatus(running ? "Creating" : "Ready", running)
+        updateStats()
+      }
+
+      async function handleStream(response) {
+        if (!response.body) {
+          throw new Error("Streaming response is unavailable")
+        }
+
+        const reader = response.body.getReader()
+        const decoder = new TextDecoder()
+        let buffer = ""
+        let currentEvent = "message"
+
+        const processLine = async line => {
+          const trimmed = line.replace(/\r$/, "")
+
+          if (!trimmed) {
+            currentEvent = "message"
+            return
+          }
+
+          if (trimmed.startsWith("event:")) {
+            currentEvent = trimmed.slice(6).trim() || "message"
+            return
+          }
+
+          if (!trimmed.startsWith("data:")) {
+            return
+          }
+
+          const payload = trimmed.slice(5).trim()
+          if (!payload) {
+            return
+          }
+
+          let data
+          try {
+            data = JSON.parse(payload)
+          } catch {
+            addLog("Received invalid stream data", "warning")
+            return
+          }
+
+          if (currentEvent === "accounts_created") {
+            if (!Array.isArray(data)) {
+              addLog("Invalid accounts_created payload", "warning")
+              return
+            }
+
+            const existing = state.accounts
+            const fresh = data.filter(account =>
+              account && typeof account === "object"
+            )
+
+            renderAccounts([...existing, ...fresh])
+            state.totalCreated = state.accounts.length
+            state.successCount += fresh.length
+            updateStats()
+
+            if (fresh.length) {
+              addLog(`Created ${fresh.length} account(s)`, "success")
+              showToast(`Created ${fresh.length} account(s)`, "success")
+            }
+
+            return
+          }
+
+          if (data && typeof data === "object") {
+            const type = data.type || "info"
+            if (data.message) {
+              addLog(data.message, type)
+            }
+          }
+        }
+
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) {
+            break
+          }
+
+          buffer += decoder.decode(value, { stream: true })
+          const lines = buffer.split("\n")
+          buffer = lines.pop() || ""
+
+          for (const line of lines) {
+            await processLine(line)
+          }
+        }
+
+        buffer += decoder.decode()
+
+        if (buffer.trim()) {
+          await processLine(buffer)
+        }
+      }
+
+      async function createAccounts(event) {
+        event.preventDefault()
+
+        if (state.running) {
+          return
+        }
+
+        const count = Number.parseInt(els.count.value, 10)
+
+        if (!Number.isInteger(count) || count < 1 || count > 50) {
+          showToast("Count must be between 1 and 50", "error")
+          els.count.focus()
+          return
+        }
+
+        state.target = count
+        state.successCount = 0
+        state.totalCreated = 0
+        state.logs = []
+        state.abortController = new AbortController()
+        els.progress.style.width = "0%"
+
+        setRunning(true)
+        addLog(`Starting creation for ${count} account(s)`, "info")
+
+        try {
+          const response = await fetch("/signup_stream", {
+            method: "POST",
+            body: new FormData(els.form),
+            signal: state.abortController.signal,
+            headers: {
+              Accept: "text/event-stream"
+            },
+            cache: "no-store"
+          })
+
+          if (!response.ok) {
+            throw new Error(`Server returned HTTP ${response.status}`)
+          }
+
+          await handleStream(response)
+
+          addLog(
+            `Finished. ${state.successCount} of ${state.target} account(s) reported`,
+            state.successCount ? "success" : "warning"
+          )
+        } catch (error) {
+          if (error?.name === "AbortError") {
+            addLog("Creation cancelled", "warning")
+            showToast("Creation cancelled", "warning")
+          } else {
+            addLog(`Connection error: ${error.message}`, "error")
+            showToast("Creation failed", "error")
+          }
+        } finally {
+          state.abortController = null
+          setRunning(false)
+          els.progress.style.width = "100%"
+
+          window.setTimeout(() => {
+            if (!state.running) {
+              els.progress.style.width = "0%"
+            }
+          }, 700)
+        }
+      }
+
+      async function loadAccounts() {
+        try {
+          const response = await fetch("/get_accounts", {
+            method: "GET",
+            cache: "no-store",
+            headers: {
+              Accept: "application/json"
+            }
+          })
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`)
+          }
+
+          const data = await response.json()
+
+          if (!Array.isArray(data)) {
+            throw new Error("Invalid account response")
+          }
+
+          renderAccounts(data)
+          state.totalCreated = data.length
+          state.successCount = data.length
+          updateStats()
+          addLog(`Loaded ${data.length} account(s)`, "info")
+        } catch (error) {
+          addLog(`Could not load accounts: ${error.message}`, "error")
+          showToast("Could not load accounts", "error")
+        }
+      }
+
+      function updateClock() {
+        els.clock.textContent = new Date().toLocaleTimeString([], {
+          hour12: false
+        })
+      }
+
+      // ── Resize for 3 columns ──
+      function initResize() {
+        let dragging = false
+        let startX = 0
+        let startLeft = 0
+        let startMiddle = 0
+        let target = null
+
+        const stop = () => {
+          if (!dragging) return
+          dragging = false
+          target?.classList.remove("dragging")
+          document.body.style.cursor = ""
+          document.body.style.userSelect = ""
+          target = null
+        }
+
+        const onMove = (event) => {
+          if (!dragging || !target) return
+
+          const rect = els.workspace.getBoundingClientRect()
+          const total = rect.width
+          const dx = event.clientX - startX
+          const minLeft = 200
+          const minMiddle = 240
+          const minRight = 180
+
+          if (target === els.resizeLeft) {
+            let newLeft = Math.max(minLeft, Math.min(total - minMiddle - minRight - 12, startLeft + dx))
+            let newMiddle = total - newLeft - els.panelRight.getBoundingClientRect().width - 12
+            if (newMiddle < minMiddle) {
+              newLeft = total - minMiddle - els.panelRight.getBoundingClientRect().width - 12
+              newMiddle = minMiddle
+            }
+            if (newLeft < minLeft) {
+              newLeft = minLeft
+              newMiddle = total - newLeft - els.panelRight.getBoundingClientRect().width - 12
+            }
+            els.panelLeft.style.flex = `0 0 ${newLeft}px`
+            els.panelMiddle.style.flex = `1 1 0%`
+          }
+
+          if (target === els.resizeRight) {
+            let newRight = Math.max(minRight, Math.min(total - minLeft - minMiddle - 12, (total - (startMiddle + startX) +
+              event.clientX)))
+            let newMiddle = total - els.panelLeft.getBoundingClientRect().width - newRight - 12
+            if (newMiddle < minMiddle) {
+              newRight = total - els.panelLeft.getBoundingClientRect().width - minMiddle - 12
+              newMiddle = minMiddle
+            }
+            if (newRight < minRight) {
+              newRight = minRight
+              newMiddle = total - els.panelLeft.getBoundingClientRect().width - newRight - 12
+            }
+            els.panelRight.style.flex = `0 0 ${newRight}px`
+            els.panelMiddle.style.flex = `1 1 0%`
+          }
+        }
+
+        const onStart = (event, handle) => {
+          if (window.innerWidth <= 860) return
+          dragging = true
+          target = handle
+          startX = event.clientX
+          startLeft = els.panelLeft.getBoundingClientRect().width
+          startMiddle = els.panelMiddle.getBoundingClientRect().width
+          target.classList.add("dragging")
+          document.body.style.cursor = "col-resize"
+          document.body.style.userSelect = "none"
+          target.setPointerCapture?.(event.pointerId)
+        }
+
+        els.resizeLeft.addEventListener("pointerdown", (e) => onStart(e, els.resizeLeft))
+        els.resizeRight.addEventListener("pointerdown", (e) => onStart(e, els.resizeRight))
+
+        document.addEventListener("pointermove", onMove)
+        document.addEventListener("pointerup", stop)
+        document.addEventListener("pointercancel", stop)
+        window.addEventListener("blur", stop)
+      }
+
+      // ── Click to copy ──
+      els.table.addEventListener("click", async event => {
+        const email = event.target.closest(".email")
+        const pass = event.target.closest(".password")
+        const button = event.target.closest(".copy")
+
+        let targetEl = null
+        let text = ""
+        let msg = ""
+
+        if (email) {
+          targetEl = email
+          text = email.dataset.copy
+          msg = "Email copied"
+        } else if (pass) {
+          targetEl = pass
+          text = pass.dataset.copy
+          msg = "Password copied"
+        } else if (button) {
+          targetEl = button
+          text = button.dataset.copy
+          msg = "Password copied"
+        } else {
+          return
+        }
+
+        if (!text || text === "—") {
+          showToast("Nothing to copy", "warning")
+          return
+        }
+
+        try {
+          await copyText(text)
+
+          if (targetEl) {
+            targetEl.classList.remove("copied")
+            void targetEl.offsetWidth
+            targetEl.classList.add("copied")
+
+            if (email || pass) {
+              const row = targetEl.closest("tr")
+              const btn = row?.querySelector(".copy")
+              if (btn) {
+                btn.classList.remove("copied")
+                void btn.offsetWidth
+                btn.classList.add("copied")
+                const icon = btn.querySelector("i")
+                if (icon) {
+                  const orig = icon.className
+                  icon.className = "fas fa-check"
+                  setTimeout(() => { icon.className = orig }, 700)
+                }
+              }
+            }
+            if (button) {
+              const icon = button.querySelector("i")
+              if (icon) {
+                const orig = icon.className
+                icon.className = "fas fa-check"
+                setTimeout(() => { icon.className = orig }, 700)
+              }
+            }
+
+            setTimeout(() => {
+              targetEl.classList.remove("copied")
+              const row = targetEl.closest("tr")
+              const btn = row?.querySelector(".copy")
+              if (btn) btn.classList.remove("copied")
+              if (button) button.classList.remove("copied")
+            }, 1200)
+          }
+
+          showToast(msg, "success")
+        } catch (error) {
+          showToast(error.message || "Copy failed", "error")
+        }
+      })
+
+      // ── Event wiring ──
+      els.form.addEventListener("submit", createAccounts)
+
+      $("showAccountsBtn").addEventListener("click", loadAccounts)
+      $("exportCsvBtn").addEventListener("click", exportCsv)
+      $("copyAllBtn").addEventListener("click", copyAll)
+
+      $("clearAccountsBtn").addEventListener("click", () => {
+        if (!state.accounts.length) {
+          showToast("Account list is already empty", "info")
+          return
+        }
+        if (!window.confirm("Hide the account list? Accounts remain on the server.")) return
+        renderAccounts([])
+        state.totalCreated = 0
+        state.successCount = 0
+        updateStats()
+        showToast("Account list cleared", "info")
+      })
+
+      $("clearLogsBtn").addEventListener("click", () => {
+        state.logs = []
+        renderLogs()
+        showToast("Logs cleared", "info")
+      })
+
+      document.querySelectorAll(".filter").forEach(button => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll(".filter").forEach(item => item.classList.remove("active"))
+          button.classList.add("active")
+          state.filter = button.dataset.filter || "all"
+          renderLogs()
+        })
+      })
+
+      // ── Keyboard shortcuts ──
+      document.addEventListener("keydown", event => {
+        if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+          event.preventDefault()
+          if (!state.running) els.form.requestSubmit()
+        }
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "l") {
+          event.preventDefault()
+          els.logs.scrollTop = els.logs.scrollHeight
+        }
+        if (event.key === "Escape" && state.running) {
+          state.abortController?.abort()
+        }
+      })
+
+      // ── Init ──
+      updateClock()
+      window.setInterval(updateClock, 1000)
+
+      initResize()
+      updateStats()
+      renderLogs()
+      addLog("System ready. Waiting for commands.", "info")
+
+      window.setTimeout(loadAccounts, 250)
+    })()
+  </script>
+</body>
+</html>
